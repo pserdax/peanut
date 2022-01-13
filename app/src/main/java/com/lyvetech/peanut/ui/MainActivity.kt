@@ -1,10 +1,11 @@
-package com.lyvetech.peanut
+package com.lyvetech.peanut.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import android.view.Menu
 import android.view.MenuItem
+import com.lyvetech.peanut.R
 import com.lyvetech.peanut.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
