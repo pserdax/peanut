@@ -5,10 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.lyvetech.peanut.R
 import com.lyvetech.peanut.databinding.ActivityMainBinding
+import com.lyvetech.peanut.utils.OnboardingUtils
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(), OnboardingUtils {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -36,5 +40,13 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun showProgressBar() {
+        binding.pb.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        binding.pb.visibility = View.GONE
     }
 }
