@@ -9,8 +9,8 @@
 
     <!-- Strings used in bottom sheet -->
     <string name="txt_create_note">Alright, let\'s create one</string>
-    <string name="hint_note_title">Title goes here</string>
-    <string name="hint_note_desc">Note goes here</string>
+    <string name="hint_note_title">Your title goes here</string>
+    <string name="hint_note_desc">Your note goes here</string>
     <string name="txt_pin_note">Huh, shall we pin the note?</string>
     <string name="btn_create_note">Create note</string>
 </resources>
