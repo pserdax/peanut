@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lyvetech.peanut.R
-import com.lyvetech.peanut.databinding.FragmentFirstBinding
+import com.lyvetech.peanut.databinding.FragmentMainBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MainFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentMainBinding? = null
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
@@ -36,7 +36,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabAdd.setOnClickListener {
-            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_SETTLING
             bottomSheetDialog.show()
         }
     }
