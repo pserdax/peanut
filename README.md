@@ -1,2 +1,2 @@
 # peanut
-huh, you mean pin a note?
+:peanuts: huh, you mean pin a note?
