@@ -1,8 +1,6 @@
 package com.lyvetech.peanut.ui.fragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +18,6 @@ import com.lyvetech.peanut.databinding.FragmentMainBinding
 import com.lyvetech.peanut.db.Note
 import com.lyvetech.peanut.listeners.OnClickListener
 import com.lyvetech.peanut.ui.viewmodel.MainViewModel
-import com.lyvetech.peanut.utils.OnboardingUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import java.util.*
@@ -43,6 +40,8 @@ class MainFragment : Fragment(), OnClickListener {
     private val viewModel: MainViewModel by viewModels()
 
     private lateinit var noteAdapter: NoteAdapter
+
+    private var isForUpdate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,12 +75,11 @@ class MainFragment : Fragment(), OnClickListener {
         binding.fabAdd.setOnClickListener {
             bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_SETTLING
             bottomSheetDialog.show()
+            isForUpdate = false
         }
 
         btnCreateNote.setOnClickListener {
-            (activity as OnboardingUtils).showProgressBar()
-            Handler(Looper.getMainLooper()).postDelayed({ manageNoteCreation() }, 200)
-            (activity as OnboardingUtils).hideProgressBar()
+            manageNoteCreation()
         }
 
         manageBottomSheetBehaviour()
@@ -111,7 +109,11 @@ class MainFragment : Fragment(), OnClickListener {
             note.isPinned = swIsPinned.isChecked
             note.timestamp = Calendar.getInstance().timeInMillis
 
-            viewModel.insertNote(note)
+            if (isForUpdate) {
+                viewModel.updateNote(note)
+            } else {
+                viewModel.insertNote(note)
+            }
         }
 
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -143,11 +145,14 @@ class MainFragment : Fragment(), OnClickListener {
     override fun onNoteClicked(note: Note) {
         bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_SETTLING
         bottomSheetDialog.show()
+        isForUpdate = true
 
         bottomSheetDialog.let {
             it.et_note_title.setText(note.title)
             it.et_note_desc.setText(note.desc)
             it.switch_pin.isChecked = note.isPinned
+            it.btn_create_note.setText(R.string.btn_update_note)
+            it.tv_title.setText(R.string.txt_edit_note)
         }
     }
 
