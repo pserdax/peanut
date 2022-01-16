@@ -11,7 +11,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -19,9 +18,11 @@ import com.lyvetech.peanut.R
 import com.lyvetech.peanut.adapters.NoteAdapter
 import com.lyvetech.peanut.databinding.FragmentMainBinding
 import com.lyvetech.peanut.db.Note
+import com.lyvetech.peanut.listeners.OnClickListener
 import com.lyvetech.peanut.ui.viewmodel.MainViewModel
 import com.lyvetech.peanut.utils.OnboardingUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.bottom_sheet.*
 import java.util.*
 
 /**
@@ -29,7 +30,7 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), OnClickListener {
 
     private var _binding: FragmentMainBinding? = null
 
@@ -83,7 +84,7 @@ class MainFragment : Fragment() {
             (activity as OnboardingUtils).hideProgressBar()
         }
 
-
+        manageBottomSheetBehaviour()
     }
 
     override fun onDestroyView() {
@@ -117,8 +118,40 @@ class MainFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() = binding.rvNote.apply {
-        noteAdapter = NoteAdapter()
+        noteAdapter = NoteAdapter(this@MainFragment)
         adapter = noteAdapter
         layoutManager = GridLayoutManager(requireContext(), 2)
+    }
+
+    private fun manageBottomSheetBehaviour() {
+        bottomSheetDialog.behavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                //Here listen all of action bottom sheet
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetDialog.let {
+                        it.et_note_title.setText("")
+                        it.et_note_desc.setText("")
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onNoteClicked(note: Note) {
+        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_SETTLING
+        bottomSheetDialog.show()
+
+        bottomSheetDialog.let {
+            it.et_note_title.setText(note.title)
+            it.et_note_desc.setText(note.desc)
+            it.switch_pin.isChecked = note.isPinned
+        }
+    }
+
+    override fun onNoteLongClicked(note: Note) {
+        TODO("Not yet implemented")
     }
 }

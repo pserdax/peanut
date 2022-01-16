@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.lyvetech.peanut.databinding.NoteItemBinding
 import com.lyvetech.peanut.db.Note
+import com.lyvetech.peanut.listeners.OnClickListener
 
-class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(
+    private val onClickListener: OnClickListener
+) :
+    RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     private lateinit var binding: NoteItemBinding
 
@@ -43,11 +47,18 @@ class NoteAdapter : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
             val desc = note.desc
             binding.tvDesc.text = desc
+
+            binding.root.setOnClickListener {
+                onClickListener.onNoteClicked(note)
+            }
+
+//            binding.root.setOnLongClickListener {
+//                onClickListener.onNoteLongClicked(note)
+//            }
         }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
 }
